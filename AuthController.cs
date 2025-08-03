@@ -2,6 +2,7 @@
 using JwtAuthDemo.Data;
 using JwtAuthDemo.DTOS;
 using JwtAuthDemo.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -12,6 +13,7 @@ using System.Text;
 namespace JwtAuthDemo
 {
     [Route("api/[controller]")]
+    [AllowAnonymous]
     [ApiController]
     public class AuthController : ControllerBase
     {
@@ -47,7 +49,7 @@ namespace JwtAuthDemo
         {
             var User = _context.users.FirstOrDefault(u =>  u.Username == request.Username);
             if(User == null || !BCrypt.Net.BCrypt.Verify(request.Password, User.PasswordHash))
-                    return Task.FromResult<IActionResult>(Unauthorized("Invelid UserName or Password"));
+                    return Task.FromResult<IActionResult>(BadRequest("Invelid UserName or Password"));
 
             var token = GenerateJwtToken(User);
             return Task.FromResult<IActionResult>(Ok(new { token }));

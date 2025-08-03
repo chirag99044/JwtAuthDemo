@@ -6,6 +6,20 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Define a CORS policy
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: myAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200") 
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
+});
+
 // Add services to the container.
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -37,6 +51,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+
+app.UseRouting(); // Routing must come before CORS
+
+app.UseCors(myAllowSpecificOrigins); // Use the CORS policy
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

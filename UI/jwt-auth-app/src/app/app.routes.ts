@@ -4,5 +4,6 @@ import { RegisterComponent } from './auth/register.component';
 
 export const routes: Routes = [
    { path: '', component: RegisterComponent },
-  { path: 'login', component: LoginComponent }
+  { path: 'login', component: LoginComponent },
+  { path: 'users', loadComponent: () => import('./users/all-users.component').then(m => m.AllUsersComponent) }
 ];

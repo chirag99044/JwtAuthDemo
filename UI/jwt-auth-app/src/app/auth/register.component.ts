@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../services/auth.service';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule,RouterModule],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css'
 })
@@ -28,7 +28,17 @@ export class RegisterComponent {
         alert('Registered successfully');
         this.router.navigate(['/login']);
       },
-      error: () => alert('Registration failed')
+      error: (err) => {
+        if(err.status === 200) {
+          alert('Registration successful');
+          this.router.navigate(['/login']);
+        }else if(err.status === 400) {
+           alert('Username already exists');
+        }
+        else {
+          alert('Registration failed: ');
+        }
+      }
     });
   }
 }

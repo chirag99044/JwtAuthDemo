@@ -40,6 +40,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateIssuer = true,
             ValidIssuer = jwtSettings["Issuer"],
             ValidateAudience = true,
+            ClockSkew = TimeSpan.Zero, 
             ValidAudience = jwtSettings["Audience"],
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
@@ -56,6 +57,8 @@ app.UseRouting(); // Routing must come before CORS
 
 app.UseCors(myAllowSpecificOrigins); // Use the CORS policy
 
+app.UseDeveloperExceptionPage(); // Add this before UseRouting();
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -64,7 +67,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthentication();
+app.UseAuthentication();   
+app.UseAuthorization();
 
 app.MapControllers();
 app.Run();

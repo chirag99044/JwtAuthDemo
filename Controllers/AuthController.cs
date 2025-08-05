@@ -10,7 +10,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace JwtAuthDemo
+namespace JwtAuthDemo.Controllers
 {
     [Route("api/[controller]")]
     [AllowAnonymous]
@@ -30,7 +30,7 @@ namespace JwtAuthDemo
         public async Task<IActionResult> Register(UserDto request)
         {
             if (await _context.users.AnyAsync(u => u.Username == request.Username))
-                return BadRequest("User Already Exist");
+                return StatusCode(StatusCodes.Status403Forbidden,"User Already Exist");
 
             var User = new User
             {
